@@ -1,0 +1,25 @@
+html, body {
+    height: 100%;
+  }
+
+body {
+    background-color: whitesmoke;
+}
+
+#title{
+    text-align: center;
+    font-size: 30px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif, Courier, monospace;
+    color: rgb(58, 85, 97);
+}
+
+  #Sudoku {
+    margin: 0;
+    display: flex;
+  
+    /* This centers our sketch horizontally. */
+    justify-content: center;
+  
+    /* This centers our sketch vertically. */
+    align-items: center;
+  }

@@ -1,0 +1,17 @@
+// Class for the big separator lines
+class Line {
+    constructor(x1, y1, x2, y2) {
+        this.x1 = x1;
+        this.y1 = y1;
+        this.x2 = x2;
+        this.y2 = y2;
+
+        this.weight = 4;
+    }
+    drawLine() {
+
+        strokeWeight(this.weight);
+        line(this.x1, this.y1, this.x2, this.y2);
+        strokeWeight(1);
+    }
+}
