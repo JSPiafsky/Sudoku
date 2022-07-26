@@ -17,7 +17,7 @@ class Board {
                 y_position = j * 600 / this.size;
 
                 //Create Cells and Push to array
-                const currentCell = new Cell(this.size, { x: x_position, y: y_position });
+                const currentCell = new Cell(this.size, { x: x_position, y: y_position }, [i, j]);
                 this.cellArray.push(currentCell);
 
                 //Create horizontal Lines and Push to array
@@ -40,6 +40,7 @@ class Board {
         textSize(40);
         // Draw Cells
         for (const cell of this.cellArray) {
+            cell.dupe = this.checkIfInvalid(cell.index_x, cell.index_y);
             cell.drawCell();
         }
 
@@ -47,6 +48,15 @@ class Board {
         for (const lines of this.lineArray) {
             lines.drawLine();
         }
+    }
+
+    checkIfWon () {
+        for (const cell of this.cellArray) {
+            if (this.checkIfInvalid(cell.index_x, cell.index_y)){
+                return false;
+            }
+        }
+        return true;
     }
 
     findCellFromPixels(pos) {
@@ -115,33 +125,39 @@ class Board {
         }
     }
 
-    checkIfValid(x_pos, y_pos) {
-        // Function returns a list of booleans where duplicates values are true and non-dupes are false
-        var findDupes = (cellGroup) => {
-            return cellGroup.map((x) => {
-                return (x === null) ? false : (cellGroup.filter(y => y === x).length > 1)
-            });
-        }
+    // Function returns a list of booleans where duplicates values are true and non-dupes are false
+    findDupes(cellGroup) {
+        return cellGroup.map((x) => {
+            return (x === null) ? false : (cellGroup.filter(y => y === x).length > 1);
+        });
+    }
 
+    checkIfInvalid(x_pos, y_pos, debug = false) {
+        // Takes some index and determines wether the mega-cell there contains duplicate numbers
         var checkMegaCell = (index) => {
-            return findDupes(
+            return this.findDupes(
                 this.getState.megaCell(index).map(x => x.displayNumber)
             );
         }
 
         var checkRow = (row) => {
-            return findDupes(
+            return this.findDupes(
                 this.getState.row(row).map(x => x.displayNumber)
             );
         }
 
         var checkColumn = (col) => {
-            return findDupes(
-                this.getState.col(col).map(x => x.displayNumber)
+            return this.findDupes(
+                this.getState.column(col).map(x => x.displayNumber)
             );
         }
-
-        return checkRow(y_pos);
+        if (debug) {
+            console.log("megaCell: " + (Math.floor(x_pos / 3) + Math.floor(y_pos / 3)));
+            console.log(checkMegaCell((x_pos + y_pos * this.size ** 1/2)));
+        }
+        //checkMegaCell((x_pos % 3), Math.floor(y_pos / 3))
+        // x and y switched because... its complicated: essentially y designates what row its in, but the cell is the xth object of that row and vice versa
+        return (checkColumn(x_pos)[y_pos] || checkRow(y_pos)[x_pos]);
     }
 
     generateBoard(mode) {
@@ -153,13 +169,22 @@ class Board {
     }
 
     update() {
+        if (!(this.cellArray.map(x => x.displayNumber).includes(null))){
+            if (this.checkIfWon()){
+                console.log("You Won!");
+            }
+        }
+
+        // See if the user has inputted anything aka if anything has changed
         if (this.selected.length >= 2) {
             try {
                 this.selected[1].pressedToggle();
                 this.selected.reverse().pop().pressedToggle();
+
             } catch (TypeError) {
                 null
             } finally {
+                
                 this.drawBoard();
             }
 
