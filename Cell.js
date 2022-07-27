@@ -11,16 +11,19 @@ class Cell {
 
     static idGen = infinite();
 
-    constructor(size, pos) {
+    constructor(size, pos, index_pos) {
         this.id = Cell.idGen.next().value;
         this.displayNumber = null;
         this.size = size;
         this.cellSize = 600 / this.size;
         this.selected = false;
         this.isEditable = true;
+        this.dupe = false;
+        
 
         this.color = colorPalette.cell;
         this.textColor = colorPalette.text;
+        [this.index_x, this.index_y] = index_pos;
         this.pos = pos;
         this.rowSelected = false;
         this.colSelected = false;
@@ -31,12 +34,20 @@ class Cell {
     pressedToggle() {
         // If this cell is not selected and function is called, it is selected otherwise, it is unselected
         this.selected = this.selected ? false : true;
+    }
 
-        // If this cell is selected, change it's color to the selected cell color
-        this.color = (this.selected && this.isEditable) ? colorPalette.selectedCell : colorPalette.cell;
+    checkState() {
+        if (this.selected && this.isEditable) {
+            this.color = colorPalette.selectedCell;
+        } else if (this.dupe) {
+            this.color = colorPalette.dupeCell;
+        } else {
+            this.color = colorPalette.cell;
+        }
     }
 
     drawCell() {
+        this.checkState();
         fill(...this.color);
         square(this.pos.x, this.pos.y, this.cellSize);
         //Try to draw number on square, if number object is null draw nothing

@@ -8,6 +8,8 @@ let colorPalette = {
     cell: [255, 255, 255],
     selectedCell: [219, 255, 255],
     text: [0, 0, 0],
+    dupeCell: [245, 88, 99],
+    dupeSelectedCell: [219, 255, 255],
 
     //Not Implemented:
     bigLine: [0, 0, 0],
@@ -48,6 +50,3 @@ function keyPressed() {
         gameBoard.editSelectedCell(null);
     }
 }
-
-
-

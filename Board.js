@@ -179,8 +179,8 @@ class Board {
         if (this.selected.length >= 2) {
             try {
                 this.selected[1].pressedToggle();
-                this.selected.reverse().pop().pressedToggle();
-
+                let temp = this.selected.reverse().pop();
+                temp.pressedToggle();
             } catch (TypeError) {
                 null
             } finally {
