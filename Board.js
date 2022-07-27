@@ -85,16 +85,23 @@ class Board {
 
         // Currently index based off of a scalar/collapsed coordinates,
         // might be easier to rewrite so that it is based off of 2 coords or polymorphic
-        megaCell: (index) => {
+        megaCell: (x_pos, y_pos) => {
+
             let megaCellSize = Math.sqrt(this.size);
-            let pos = (input) => {
-                return [Math.floor(input / megaCellSize), input % megaCellSize];
+
+            // Takes an x y pos and quantizes it to the first cell in the mega cell
+            let quantizeToMega = (input) => {
+                return Math.floor(input / megaCellSize) * megaCellSize;
             }
 
+            let startX = quantizeToMega(x_pos);
+            let startY = quantizeToMega(y_pos);
             let state = [];
 
-            for (let i = 0; i < this.size; i++) {
-                state.push(this.findCellFromGameCoordinates(...pos(index + i)));
+            for (let i = startX; i < startX + megaCellSize; i++) {
+                for (let j = startY; j < startY + megaCellSize; j++) {
+                state.push(this.findCellFromGameCoordinates(i, j));
+                }
             }
 
             return state;
