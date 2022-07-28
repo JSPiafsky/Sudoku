@@ -100,7 +100,7 @@ class Board {
 
             for (let i = startX; i < startX + megaCellSize; i++) {
                 for (let j = startY; j < startY + megaCellSize; j++) {
-                state.push(this.findCellFromGameCoordinates(i, j));
+                state.push(this.findCellFromGameCoordinates(j, i));
                 }
             }
 
@@ -140,10 +140,10 @@ class Board {
     }
 
     checkIfInvalid(x_pos, y_pos, debug = false) {
-        // Takes some index and determines wether the mega-cell there contains duplicate numbers
-        var checkMegaCell = (index) => {
+
+        var checkMegaCell = (x_val, y_val) => {
             return this.findDupes(
-                this.getState.megaCell(index).map(x => x.displayNumber)
+                this.getState.megaCell(x_val, y_val).map(x => x.displayNumber)
             );
         }
 
@@ -159,12 +159,15 @@ class Board {
             );
         }
         if (debug) {
-            console.log("megaCell: " + (Math.floor(x_pos / 3) + Math.floor(y_pos / 3)));
-            console.log(checkMegaCell((x_pos + y_pos * this.size ** 1/2)));
+            // console.log("megaCell: " + (startX + x_pos + (startY + y_pos) * megaCellSize));
+            console.log("Square Number: " + this.findCellFromGameCoordinates(x_pos, y_pos).displayNumber);
+            console.log(checkMegaCell(x_pos, y_pos));
+            console.log((x_pos % 3) * 3 + (y_pos % 3));
+            console.log(checkMegaCell(x_pos, y_pos)[(x_pos % 3) * 3 + (y_pos % 3)]);
         }
-        //checkMegaCell((x_pos % 3), Math.floor(y_pos / 3))
+
         // x and y switched because... its complicated: essentially y designates what row its in, but the cell is the xth object of that row and vice versa
-        return (checkColumn(x_pos)[y_pos] || checkRow(y_pos)[x_pos]);
+        return (checkColumn(x_pos)[y_pos] || checkRow(y_pos)[x_pos] || checkMegaCell(x_pos, y_pos)[(x_pos % 3) * 3 + (y_pos % 3)]);
     }
 
     generateBoard(mode) {
@@ -191,7 +194,6 @@ class Board {
             } catch (TypeError) {
                 null
             } finally {
-                
                 this.drawBoard();
             }
 
