@@ -33,13 +33,27 @@ class Board {
             }
 
         }
-
+        this.drawBoard();
     }
 
-    drawBoard() {
+    drawBoard(cell2Update = {}, deltaCell2Update = {}) {
+        let array2Loop = [];
+
+        if ('id' in cell2Update){
+            array2Loop = [cell2Update];
+        }
+
+        if ('id' in deltaCell2Update){
+            array2Loop = array2Loop.concat(deltaCell2Update);
+        }
+
+        if (array2Loop.length === 0){
+            array2Loop = this.cellArray;
+        }
+             
         textSize(40);
         // Draw Cells
-        for (const cell of this.cellArray) {
+        for (const cell of array2Loop) {
             cell.dupe = this.checkIfInvalid(cell.index_x, cell.index_y);
             cell.drawCell();
         }
@@ -51,12 +65,16 @@ class Board {
     }
 
     checkIfWon () {
-        for (const cell of this.cellArray) {
-            if (this.checkIfInvalid(cell.index_x, cell.index_y)){
-                return false;
+        if (!(this.cellArray.map(x => x.displayNumber).includes(null))){
+            for (const cell of this.cellArray) {
+                if (this.checkIfInvalid(cell.index_x, cell.index_y)){
+                    return false;
+                }
             }
+            return true;
+        } else {
+            return false;
         }
-        return true;
     }
 
     findCellFromPixels(pos) {
@@ -179,25 +197,24 @@ class Board {
     }
 
     update() {
-        if (!(this.cellArray.map(x => x.displayNumber).includes(null))){
-            if (this.checkIfWon()){
-                console.log("You Won!");
-            }
-        }
+        // if (!(this.cellArray.map(x => x.displayNumber).includes(null))){
+        //     if (this.checkIfWon()){
+        //         console.log("You Won!");
+        //     }
+        // }
 
         // See if the user has inputted anything aka if anything has changed
         if (this.selected.length >= 2) {
+            let updateCells = [...this.selected];
             try {
                 this.selected[1].pressedToggle();
-                let temp = this.selected.reverse().pop();
-                temp.pressedToggle();
+                let deltaUpdateCell = this.selected.reverse().pop();
+                deltaUpdateCell.pressedToggle();
             } catch (TypeError) {
                 null
             } finally {
-                this.drawBoard();
+                this.drawBoard(...updateCells);
             }
-
-
         }
     }
 }

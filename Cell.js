@@ -44,6 +44,11 @@ class Cell {
         } else {
             this.color = colorPalette.cell;
         }
+        if (this.isEditable) {
+            this.textColor = colorPalette.text;
+        } else {
+            this.textColor = colorPalette.nonEditableText;
+        }
     }
 
     drawCell() {

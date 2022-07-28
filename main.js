@@ -7,7 +7,8 @@ let solution = ['3', '1', '9', '8', '6', '2', '4', '7', '5', '5', '6', '2', '3',
 let colorPalette = {
     cell: [255, 255, 255],
     selectedCell: [219, 255, 255],
-    text: [0, 0, 0],
+    text: [90, 90, 90],
+    nonEditableText: [0, 0, 0],
     dupeCell: [245, 88, 99],
     dupeSelectedCell: [219, 255, 255],
 
