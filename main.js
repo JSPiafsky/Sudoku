@@ -38,7 +38,7 @@ function draw() {
 function mousePressed() {
     let PressedCell = gameBoard.findCellFromPixels({ x: mouseX, y: mouseY });
     if (PressedCell === null) {
-        gameBoard.selected.push({ pressed: null });
+        gameBoard.selected.push(gameBoard.nullCell);
     } else if (gameBoard.selected[0] != PressedCell) {
         gameBoard.selected.push(PressedCell);
     }

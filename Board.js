@@ -6,6 +6,8 @@ class Board {
         this.selected = [{ pressedToggle: () => null }];
         this.createBoard();
 
+        this.nullCell = new Cell(this.size, { x: 1.0, y: 0.0 }, ['h', 'h']);
+        this.nullCell.id = -1;
     }
 
     createBoard() {
@@ -91,7 +93,7 @@ class Board {
     }
 
     editSelectedCell(num) {
-        if ('id' in this.selected[0]) {
+        if (this.selected.id !== -1) {
             if (this.selected[0].isEditable) {
                 this.selected[0].displayNumber = num;
             }
@@ -206,15 +208,14 @@ class Board {
         // See if the user has inputted anything aka if anything has changed
         if (this.selected.length >= 2) {
             let updateCells = [...this.selected];
-            try {
-                this.selected[1].pressedToggle();
-                let deltaUpdateCell = this.selected.reverse().pop();
-                deltaUpdateCell.pressedToggle();
-            } catch (TypeError) {
-                null
-            } finally {
-                this.drawBoard(...updateCells);
-            }
+
+            // this.selected will look like [oldCell, newCell], so we toggle the newCell state, reverse the array and pop out oldCell, then toggle the oldCell state
+            this.selected[1].pressedToggle();
+            let deltaUpdateCell = this.selected.reverse().pop();
+            deltaUpdateCell.pressedToggle();
+
+            // Finally redraw the board
+            this.drawBoard(...updateCells);
         }
     }
 }
